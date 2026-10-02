@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titulo %}Página no encontrada — Cumbre Digital MX 2026{% endblock %}
+
+{% block contenido %}
+<main class="tarjeta confirmacion">
+  <h2>Página no encontrada</h2>
+  <p class="bienvenida">No encontramos lo que buscas. Revisa la dirección o vuelve al formulario.</p>
+  <a class="boton" href="{{ url_for('inicio') }}">Ir al formulario</a>
+</main>
+{% endblock %}

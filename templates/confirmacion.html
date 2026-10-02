@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}Cumbre Digital MX 2026 — Registro exitoso{% endblock %}
+
+{% block contenido %}
+<main class="tarjeta confirmacion">
+  <div class="check">✓</div>
+  <h2>¡Registro exitoso!</h2>
+  <div class="numero-registro">{{ asistente['id'] | registro }}</div>
+  <p class="bienvenida">
+    ¡Bienvenido/a, <strong>{{ asistente['nombre_completo'] }}</strong>!<br>
+    Te esperamos en la <strong>Cumbre Digital MX 2026</strong> para
+    transformar juntos el futuro digital de tu PyME.
+  </p>
+  <a class="boton" href="{{ url_for('inicio') }}">Registrar a otra persona</a>
+</main>
+{% endblock %}

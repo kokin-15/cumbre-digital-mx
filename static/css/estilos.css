@@ -1,0 +1,154 @@
+/* ===== Variables de color (tema oscuro) ===== */
+:root {
+  --fondo: #0a0e17;
+  --tarjeta: #121826;
+  --borde: #232c40;
+  --texto: #e8ecf5;
+  --texto-suave: #8b96b0;
+  --acento: #2979ff;          /* azul eléctrico */
+  --acento-brillo: #5c9dff;
+  --error: #ff5c6c;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(41, 121, 255, 0.22), transparent 55%),
+    var(--fondo);
+  color: var(--texto);
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+/* ===== Logo de texto ===== */
+.logo {
+  font-size: clamp(1.5rem, 6vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+.logo span { color: var(--acento); text-shadow: 0 0 18px rgba(41, 121, 255, 0.6); }
+.subtitulo {
+  margin: 4px 0 24px;
+  text-align: center;
+  color: var(--texto-suave);
+  font-size: 0.95rem;
+}
+
+/* ===== Tarjeta principal ===== */
+.tarjeta {
+  width: 100%;
+  max-width: 480px;
+  padding: 28px;
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+.tarjeta h2 { font-size: 1.2rem; margin-bottom: 20px; }
+
+/* ===== Campos del formulario ===== */
+.campo { margin-bottom: 18px; }
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+input, select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--fondo);
+  color: var(--texto);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--acento);
+  box-shadow: 0 0 0 3px rgba(41, 121, 255, 0.25);
+}
+.invalido { border-color: var(--error); }
+.error {
+  display: block;
+  min-height: 1.1em;
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: var(--error);
+}
+
+/* ===== Botones (también enlaces con forma de botón) ===== */
+button, .boton {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  background: var(--acento);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+button:hover, .boton:hover { background: var(--acento-brillo); box-shadow: 0 6px 20px rgba(41, 121, 255, 0.4); }
+button:active, .boton:active { transform: scale(0.98); }
+
+/* ===== Pantalla de confirmación ===== */
+.confirmacion { text-align: center; }
+.check {
+  width: 60px; height: 60px;
+  margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: rgba(41, 121, 255, 0.15);
+  border: 2px solid var(--acento);
+  color: var(--acento);
+  font-size: 1.8rem;
+}
+.numero-registro {
+  display: inline-block;
+  margin: 12px 0;
+  padding: 10px 22px;
+  background: var(--fondo);
+  border: 1px dashed var(--acento);
+  border-radius: 10px;
+  color: var(--acento-brillo);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+.bienvenida { margin: 8px 0 24px; color: var(--texto-suave); }
+.bienvenida strong { color: var(--texto); }
+
+/* ===== Panel de administración ===== */
+.tarjeta-ancha { max-width: 900px; }
+.resumen { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.resumen div {
+  padding: 8px 14px;
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+.resumen strong { color: var(--acento-brillo); }
+.tabla-contenedor { overflow-x: auto; margin-bottom: 20px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--borde); white-space: nowrap; }
+th { color: var(--texto-suave); font-weight: 600; }
+.vacio { color: var(--texto-suave); text-align: center; margin: 20px 0; }

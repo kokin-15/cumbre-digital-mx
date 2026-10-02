@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block titulo %}Cumbre Digital MX 2026 — Registro{% endblock %}
+
+{% block contenido %}
+<main class="tarjeta">
+  <!-- Formulario de registro: se envía al servidor con POST -->
+  <form action="{{ url_for('registro') }}" method="post" novalidate>
+    <h2>Regístrate al evento</h2>
+
+    <div class="campo">
+      <label for="nombre">Nombre completo</label>
+      <input type="text" id="nombre" name="nombre" autocomplete="name"
+             placeholder="Ej. María López García" value="{{ datos.get('nombre', '') }}"
+             class="{{ 'invalido' if errores.get('nombre') }}">
+      <span class="error">{{ errores.get('nombre', '') }}</span>
+    </div>
+
+    <div class="campo">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" name="email" autocomplete="email"
+             placeholder="tu@correo.com" value="{{ datos.get('email', '') }}"
+             class="{{ 'invalido' if errores.get('email') }}">
+      <span class="error">{{ errores.get('email', '') }}</span>
+    </div>
+
+    <div class="campo">
+      <label for="empresa">Empresa u organización</label>
+      <input type="text" id="empresa" name="empresa" autocomplete="organization"
+             placeholder="Ej. Mi Empresa S.A. de C.V." value="{{ datos.get('empresa', '') }}"
+             class="{{ 'invalido' if errores.get('empresa') }}">
+      <span class="error">{{ errores.get('empresa', '') }}</span>
+    </div>
+
+    <div class="campo">
+      <label for="area">Área de interés</label>
+      <select id="area" name="area" class="{{ 'invalido' if errores.get('area') }}">
+        <option value="">Selecciona un área</option>
+        {% for area in areas %}
+        <option value="{{ area }}" {{ 'selected' if datos.get('area') == area }}>{{ area }}</option>
+        {% endfor %}
+      </select>
+      <span class="error">{{ errores.get('area', '') }}</span>
+    </div>
+
+    <button type="submit">Registrarme</button>
+  </form>
+</main>
+{% endblock %}
