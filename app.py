@@ -1,14 +1,27 @@
 """Servidor Flask de Cumbre Digital MX 2026 (registro de asistentes)."""
 import os
 import re
-import sqlite3
 
+import psycopg
+from dotenv import load_dotenv
 from flask import Flask, abort, g, jsonify, redirect, render_template, request, url_for
+from psycopg.rows import dict_row
+
+# En local lee el archivo .env; en Render usa la variable de entorno del panel
+load_dotenv()
 
 app = Flask(__name__)
 
-# Ruta absoluta a evento.db (en la raíz del proyecto, junto a este archivo)
-RUTA_BD = os.path.join(os.path.dirname(os.path.abspath(__file__)), "evento.db")
+# Cadena de conexión a Supabase (PostgreSQL)
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError(
+        "Falta la variable DATABASE_URL. Créala en el archivo .env (local) "
+        "o en las variables de entorno de Render."
+    )
+
+# Columnas que se leen de la tabla (se renombran para que las plantillas sigan igual)
+COLUMNAS = "id, nombre AS nombre_completo, email, empresa, area_interes, numero_registro, fecha_registro"
 
 # Áreas de interés permitidas (igual que en el formulario)
 AREAS = ["Tecnología", "Marketing", "Negocios", "Emprendimiento"]
@@ -24,10 +37,10 @@ MENSAJES_VACIO = {
 
 # ===== Base de datos =====
 def obtener_bd():
-    """Abre (una sola vez por petición) la conexión a SQLite."""
+    """Abre (una sola vez por petición) la conexión a PostgreSQL."""
     if "bd" not in g:
-        g.bd = sqlite3.connect(RUTA_BD)
-        g.bd.row_factory = sqlite3.Row  # permite leer columnas por nombre
+        # dict_row: cada fila se devuelve como diccionario (columna -> valor)
+        g.bd = psycopg.connect(DATABASE_URL, row_factory=dict_row)
     return g.bd
 
 
@@ -37,27 +50,6 @@ def cerrar_bd(_error):
     bd = g.pop("bd", None)
     if bd is not None:
         bd.close()
-
-
-def iniciar_bd():
-    """Crea la tabla y el índice si no existen (útil en Render, que arranca sin BD)."""
-    bd = sqlite3.connect(RUTA_BD)
-    bd.execute(
-        """CREATE TABLE IF NOT EXISTS asistentes (
-               id INTEGER PRIMARY KEY AUTOINCREMENT,
-               nombre_completo TEXT NOT NULL,
-               email TEXT NOT NULL,
-               empresa TEXT NOT NULL,
-               area_interes TEXT NOT NULL,
-               fecha_registro TEXT NOT NULL DEFAULT (datetime('now','localtime'))
-           )"""
-    )
-    # Evita registrar dos veces el mismo correo (sin distinguir mayúsculas)
-    bd.execute(
-        "CREATE UNIQUE INDEX IF NOT EXISTS idx_asistentes_email ON asistentes (lower(email))"
-    )
-    bd.commit()
-    bd.close()
 
 
 def formato_registro(numero):
@@ -106,14 +98,19 @@ def registro():
     if not errores:
         try:
             bd = obtener_bd()
-            cursor = bd.execute(
-                "INSERT INTO asistentes (nombre_completo, email, empresa, area_interes) "
-                "VALUES (?, ?, ?, ?)",
+            # numero_registro es obligatorio: se toma el siguiente id de la secuencia
+            # y con él se arma el código (7 -> REG-0007) en la misma sentencia
+            nuevo_id = bd.execute(
+                "WITH n AS (SELECT nextval(pg_get_serial_sequence('asistentes', 'id')) AS id) "
+                "INSERT INTO asistentes (id, nombre, email, empresa, area_interes, numero_registro) "
+                "SELECT id, %s, %s, %s, %s, 'REG-' || lpad(id::text, 4, '0') FROM n "
+                "RETURNING id",
                 (datos["nombre"], datos["email"], datos["empresa"], datos["area"]),
-            )
+            ).fetchone()["id"]
             bd.commit()
-            return redirect(url_for("confirmacion", id=cursor.lastrowid))
-        except sqlite3.IntegrityError:
+            return redirect(url_for("confirmacion", id=nuevo_id))
+        except psycopg.errors.UniqueViolation:
+            bd.rollback()  # limpia la transacción fallida
             errores["email"] = "Este correo ya está registrado."
 
     # Si hubo errores, se vuelve a mostrar el formulario con lo que escribió la persona
@@ -124,7 +121,7 @@ def registro():
 def confirmacion(id):
     """Muestra el número de registro del asistente."""
     asistente = obtener_bd().execute(
-        "SELECT * FROM asistentes WHERE id = ?", (id,)
+        f"SELECT {COLUMNAS} FROM asistentes WHERE id = %s", (id,)
     ).fetchone()
     if asistente is None:
         abort(404)
@@ -135,7 +132,7 @@ def confirmacion(id):
 def admin():
     """Lista de asistentes con total y conteo por área (sin login por ahora)."""
     bd = obtener_bd()
-    asistentes = bd.execute("SELECT * FROM asistentes ORDER BY id DESC").fetchall()
+    asistentes = bd.execute(f"SELECT {COLUMNAS} FROM asistentes ORDER BY id DESC").fetchall()
     por_area = bd.execute(
         "SELECT area_interes, COUNT(*) AS total FROM asistentes GROUP BY area_interes"
     ).fetchall()
@@ -145,8 +142,11 @@ def admin():
 @app.get("/api/asistentes")
 def api_asistentes():
     """Lista de asistentes en JSON (útil para pruebas automáticas)."""
-    filas = obtener_bd().execute("SELECT * FROM asistentes ORDER BY id").fetchall()
-    return jsonify([dict(fila) for fila in filas])
+    filas = obtener_bd().execute(f"SELECT {COLUMNAS} FROM asistentes ORDER BY id").fetchall()
+    # fecha_registro es un datetime: se pasa a texto ISO para el JSON
+    for fila in filas:
+        fila["fecha_registro"] = fila["fecha_registro"].isoformat(sep=" ", timespec="seconds")
+    return jsonify(filas)
 
 
 @app.errorhandler(404)
@@ -154,9 +154,6 @@ def no_encontrado(_error):
     """Mensaje claro en español cuando la página no existe."""
     return render_template("404.html"), 404
 
-
-# Se ejecuta al importar el módulo, así también funciona con gunicorn en Render
-iniciar_bd()
 
 if __name__ == "__main__":
     app.run(debug=True)

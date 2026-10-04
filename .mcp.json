@@ -26,6 +26,10 @@
         "./evento.db"
       ],
       "env": {}
+    },
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp"
     }
   }
 }

@@ -1,5 +1,6 @@
 venv/
 evento.db
+.env
 .claude/
 .playwright-mcp/
 *.log
