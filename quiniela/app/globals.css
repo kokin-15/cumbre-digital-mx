@@ -1,0 +1,508 @@
+/* Estilos de la Quiniela: CSS puro, tema oscuro y diseño responsivo */
+:root {
+  --fondo: #0b1020;
+  --superficie: #131a30;
+  --borde: #26304f;
+  --texto: #e8ecf8;
+  --texto-suave: #9aa6c7;
+  --acento: #4f8cff;
+  --acento-oscuro: #3b6fd6;
+  --ok: #3ecf8e;
+  --error: #ff6b6b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+h1,
+h2 {
+  margin: 0;
+}
+
+a {
+  color: var(--acento);
+}
+
+/* ===== Estructura ===== */
+.contenedor {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.contenedor-angosto {
+  max-width: 420px;
+}
+
+.encabezado {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.encabezado p {
+  margin: 4px 0 0;
+  color: var(--texto-suave);
+}
+
+.barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.saludo {
+  margin: 2px 0 0;
+  color: var(--texto-suave);
+}
+
+section {
+  margin-top: 28px;
+}
+
+section h2 {
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+}
+
+/* ===== Tarjetas y listas ===== */
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.tarjeta {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.tarjeta-cerrada {
+  opacity: 0.9;
+}
+
+.fecha {
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.duelo {
+  margin: 0;
+  font-weight: 600;
+}
+
+.detalle {
+  margin: 4px 0 0;
+  color: var(--texto-suave);
+}
+
+.puntos {
+  margin: 6px 0 0;
+  color: var(--ok);
+  font-weight: 600;
+}
+
+.puntos-cero {
+  color: var(--texto-suave);
+}
+
+.vacio {
+  color: var(--texto-suave);
+}
+
+/* ===== Tabla de pronósticos ===== */
+.tabla-envoltura {
+  margin-top: 12px;
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.tabla th,
+.tabla td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--borde);
+}
+
+.tabla th {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.tabla th:not(:first-child),
+.tabla td:not(:first-child) {
+  text-align: center;
+}
+
+.tabla tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.fila-yo-tabla {
+  background: rgba(79, 140, 255, 0.1);
+}
+
+/* ===== Formularios ===== */
+.formulario {
+  display: grid;
+  gap: 14px;
+}
+
+.formulario label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--fondo);
+  color: var(--texto);
+  font-size: 1rem;
+}
+
+input:focus-visible,
+.boton:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+/* Formulario de pronóstico: equipo local, marcador, equipo visitante, botón */
+.pronostico {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px 10px;
+}
+
+.equipo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.equipo-local {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.equipo input {
+  width: 64px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.guion {
+  color: var(--texto-suave);
+}
+
+.pronostico .boton,
+.pronostico .aviso {
+  grid-column: 1 / -1;
+}
+
+/* ===== Botones ===== */
+.boton {
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--acento);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boton:hover:not(:disabled) {
+  background: var(--acento-oscuro);
+}
+
+.boton:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.boton-chico {
+  padding: 8px 14px;
+  font-size: 0.9rem;
+}
+
+.boton-secundario {
+  background: transparent;
+  border: 1px solid var(--borde);
+  color: var(--texto);
+}
+
+.boton-secundario:hover:not(:disabled) {
+  background: var(--superficie);
+}
+
+/* ===== Avisos ===== */
+.aviso {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.pronostico .aviso {
+  margin: 0;
+}
+
+.aviso-ok {
+  background: rgba(62, 207, 142, 0.12);
+  border: 1px solid var(--ok);
+  color: var(--ok);
+}
+
+.aviso-error {
+  background: rgba(255, 107, 107, 0.12);
+  border: 1px solid var(--error);
+  color: var(--error);
+}
+
+.cambio-modo {
+  text-align: center;
+  margin-top: 16px;
+  color: var(--texto-suave);
+}
+
+/* ===== Menú de navegación ===== */
+.navegacion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.enlaces {
+  display: flex;
+  gap: 6px;
+}
+
+.enlaces a {
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--texto-suave);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.enlaces a:hover {
+  color: var(--texto);
+}
+
+.enlaces a[aria-current="page"] {
+  background: var(--superficie);
+  color: var(--texto);
+  border: 1px solid var(--borde);
+}
+
+.encabezado-pagina {
+  margin-bottom: 20px;
+}
+
+/* ===== Ranking ===== */
+.ranking {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.fila-ranking {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+}
+
+.fila-yo {
+  border-color: var(--acento);
+  box-shadow: 0 0 0 1px var(--acento) inset;
+}
+
+.lugar {
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--texto-suave);
+}
+
+.jugador {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.jugador strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.etiqueta-yo {
+  color: var(--acento);
+  font-weight: 500;
+}
+
+.jugador .detalle {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+.total {
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.total small {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--texto-suave);
+}
+
+/* ===== Panel de administración ===== */
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--fondo);
+  color: var(--texto);
+  font-size: 1rem;
+}
+
+.resultado {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.campo-estado {
+  display: grid;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.marcador-admin {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.marcador-admin input {
+  width: 64px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.resultado .aviso {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.nota {
+  margin-top: 16px;
+}
+
+@media (max-width: 480px) {
+  .resultado {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Indicador "En vivo" ===== */
+.indicador {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 10px;
+  padding: 3px 10px;
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  color: var(--texto-suave);
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.indicador::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--texto-suave);
+}
+
+.indicador-vivo {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.indicador-vivo::before {
+  background: var(--ok);
+  animation: parpadeo 1.6s ease-in-out infinite;
+}
+
+@keyframes parpadeo {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* ===== Celulares ===== */
+@media (max-width: 480px) {
+  .equipo {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .equipo-local {
+    flex-direction: column-reverse;
+    text-align: center;
+  }
+
+  .equipo-visitante {
+    text-align: center;
+  }
+}

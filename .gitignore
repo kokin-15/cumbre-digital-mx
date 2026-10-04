@@ -7,3 +7,9 @@ evento.db
 .python-version
 __pycache__/
 *.pyc
+
+# Quiniela (Next.js)
+quiniela/node_modules/
+quiniela/.next/
+quiniela/.next-check/
+quiniela/.env.local
